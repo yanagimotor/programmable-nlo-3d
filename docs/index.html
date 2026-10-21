@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Programmable nonlinear photonics</title>
+<meta name="description" content="Interactive 3D explainer of programmable nonlinear photonics: a pattern of light written onto a chip decides what the chip does to infrared light.">
+<meta name="theme-color" content="#0b0f14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230b0f14'/%3E%3Cpath d='M8 40h48' stroke='%23ff3b30' stroke-width='5'/%3E%3Cpath d='M14 18v18M24 18v18M34 18v18M44 18v18' stroke='%233fd65a' stroke-width='5'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="./css/app.css?v=22ea9fbb">
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three-0.186.1/build/three.module.js",
+    "three/addons/": "./vendor/three-0.186.1/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="./js-9976ff1e/main.js"></script>
+</head>
+<body>
+<div id="app">
+  <main id="stage" aria-label="3D view of the experimental set-up" data-i18n-aria="aria.stage">
+    <div id="topbar">
+      <div id="tr">
+        <div id="viewbtns">
+          <button type="button" id="btn-labels" class="vbtn" data-i18n="btn.labels">Labels</button>
+          <button type="button" id="btn-explode" class="vbtn" aria-pressed="false">Open the chip</button>
+          <button type="button" id="btn-motion" class="vbtn" aria-pressed="true">Motion: on</button>
+          <button type="button" id="btn-reset" class="vbtn" data-i18n="btn.reset">Reset view</button>
+        </div>
+        <div id="hint" data-i18n="hint">Drag to rotate · scroll or pinch to zoom · tap a part to learn more</div>
+      </div>
+      <div id="tl">
+        <div id="badge" class="badge demo" role="status"></div>
+        <div id="hud" class="hud" hidden></div>
+      </div>
+    </div>
+    <div id="legend" aria-hidden="true"></div>
+    <div id="loading"><div class="spinner"></div><span data-i18n="loading">Loading the 3D lab…</span></div>
+  </main>
+  <aside id="panel">
+    <header class="head">
+      <div>
+        <h1 data-i18n="title">Programmable nonlinear photonics</h1>
+        <p class="sub" data-i18n="subtitle">Many functions from one chip design, programmed by light</p>
+      </div>
+      <button type="button" id="btn-lang" class="lang">日本語</button>
+    </header>
+    <nav id="modes" aria-label="Modes" data-i18n-aria="aria.modes"></nav>
+    <div id="presets" role="group" aria-label="Patterns" data-i18n-aria="aria.presets"></div>
+    <div id="controls"></div>
+    <div id="plotwrap"><canvas id="plot" role="img" aria-label="Plot of the current result" data-i18n-aria="aria.plot"></canvas></div>
+    <p id="caption" aria-live="polite"></p>
+    <section id="paper" class="paper" hidden aria-live="polite">
+      <div class="phead"><span class="pk" data-i18n="paper.in">In the paper</span><b id="paper-ref"></b></div>
+      <p id="paper-what"></p>
+      <button type="button" id="paper-show" class="pbtn" data-i18n="paper.show">Show the figure in the paper</button>
+    </section>
+    <section id="info" class="info" hidden aria-live="polite">
+      <div class="info-head"><h2 id="info-name"></h2><button type="button" id="info-close" class="x" data-i18n-aria="btn.close" aria-label="Close">×</button></div>
+      <p id="info-role"></p>
+      <p id="info-detail" class="detail"></p>
+      <div id="info-extra"></div>
+    </section>
+    <div id="stripwrap"><div class="stripcap" data-i18n="strip.cap">Light pattern on the chip</div><canvas id="patstrip" aria-hidden="true"></canvas></div>
+    <div id="legend-slot"></div>
+    <div id="complist"></div>
+    <p id="note" class="note" hidden></p>
+    <footer class="foot">
+      <p data-i18n="aboutData">Plots marked “measured” show the paper’s published data; plots marked “simulation” are computed from a model of this chip.</p>
+      <p><a href="https://doi.org/10.1038/s41586-025-09620-9" target="_blank" rel="noopener" data-i18n="cite">R. Yanagimoto et al., “Programmable on-chip nonlinear photonics”, Nature 649, 330–337 (2026)</a></p>
+    </footer>
+  </aside>
+</div>
+<dialog id="figview" class="figview" aria-labelledby="figview-title">
+  <div class="fv-head"><h2 id="figview-title"></h2><button type="button" id="figview-close" class="x" data-i18n-aria="btn.close" aria-label="Close">×</button></div>
+  <p class="fv-note" data-i18n="fig.note">Data panels as published (CC BY 4.0). The drawings in the paper’s figures are not included.</p>
+  <div id="figview-body" class="fv-body"></div>
+</dialog>
+<div id="fallback" hidden>
+  <p data-i18n="noWebGL">This page needs WebGL 2. Please open it in a recent version of Edge, Chrome, Firefox or Safari.</p>
+</div>
+<noscript><p class="nojs">This page needs JavaScript.</p></noscript>
+<pre id="errlog" hidden></pre>
+<script>
+// Classic script: still runs when the module scripts cannot (file:// pages, a missing module).
+(function () {
+  var q = location.search, ja = /lang=ja/.test(q) || (/kiosk/.test(q) && !/lang=en/.test(q));
+  function show(en, jp) {
+    var s = document.querySelector('#loading span');
+    var sp = document.querySelector('#loading .spinner');
+    if (!s || document.body.getAttribute('data-ready')) return;
+    if (sp) sp.style.display = 'none';
+    s.textContent = ja ? jp + '\n' + en : en + '\n' + jp;
+    s.className = 'loadmsg';
+  }
+  if (location.protocol === 'file:') {
+    show('This page has to be opened through a small local web server: double-click “View-locally.bat”, next to the “docs” folder.',
+         'このページはローカルのWebサーバー経由で開く必要があります。「docs」フォルダと同じ場所にある「View-locally.bat」をダブルクリックしてください。');
+  } else {
+    setTimeout(function () {
+      if (!window.__app) show('The 3D view could not start. Please reload the page.',
+                              '3D表示を開始できませんでした。ページを再読み込みしてください。');
+    }, 15000);
+  }
+})();
+</script>
+</body>
+</html>

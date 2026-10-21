@@ -1,0 +1,23 @@
+{
+ "package": "three",
+ "version": "0.186.1",
+ "tarball": "https://registry.npmjs.org/three/-/three-0.186.1.tgz",
+ "integrity": "sha512-blFeqb49wRCSGUGj7gtpfnSGHy2lwDk94RhUmS1c/hTby70kvChbWpkJ4Pm1390LqzzvTmzgXKHPEafJwCb8jA==",
+ "files": [
+  "build/three.module.js",
+  "build/three.core.js",
+  "LICENSE",
+  "examples/jsm/controls/OrbitControls.js",
+  "examples/jsm/postprocessing/EffectComposer.js",
+  "examples/jsm/postprocessing/MaskPass.js",
+  "examples/jsm/postprocessing/OutputPass.js",
+  "examples/jsm/postprocessing/Pass.js",
+  "examples/jsm/postprocessing/RenderPass.js",
+  "examples/jsm/postprocessing/ShaderPass.js",
+  "examples/jsm/postprocessing/UnrealBloomPass.js",
+  "examples/jsm/renderers/CSS2DRenderer.js",
+  "examples/jsm/shaders/CopyShader.js",
+  "examples/jsm/shaders/LuminosityHighPassShader.js",
+  "examples/jsm/shaders/OutputShader.js"
+ ]
+}
