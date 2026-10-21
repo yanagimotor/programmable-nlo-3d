@@ -5,6 +5,8 @@ photonics", Nature 649, 330-337 (2026), https://doi.org/10.1038/s41586-025-09620
 
 **Open the page: https://yanagimotor.github.io/programmable-nlo-3d/**
 
+Made by Ryotatsu Yanagimoto, https://yanagimotor.github.io
+
 A pattern of green light projected onto the chip writes a chi(2) grating into a silicon-nitride slab
 waveguide: where light falls on the photoconductor on top, the bias field reaches the light-guiding core.
 Changing the pattern changes what the same chip does to infrared light. The page shows the set-up in 3D
